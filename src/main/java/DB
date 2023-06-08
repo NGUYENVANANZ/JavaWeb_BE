@@ -1,0 +1,32 @@
+INSERT INTO Account (name, user_name, pass_word, role_user)
+VALUES
+('John Doe', 'johndoe', '123456', 1),
+('Jane Smith', 'janesmith1', 'abcdef', 2),
+('Jane Smith', 'janesmith2', 'abcdef', 2),
+('Jane Smith', 'janesmith3', 'abcdef', 2),
+('Jane Smith', 'janesmith4', 'abcdef', 2);
+
+
+INSERT INTO Cart (account_id, status)
+VALUES (1, true),
+        (2, true),
+        (3, true),
+        (4, true),
+        (5, true);
+
+
+INSERT INTO Product (namesp, price, img, amount, product_type)
+VALUES ('Product A', 100000, 'product-a.jpg', 10, 1),
+       ('Product B', 50000, 'product-b.jpg', 20, 1),
+		('Product C', 200000, 'product-c.jpg', 5, 2);
+
+
+INSERT INTO Detail_Cart (cart_id_cart, product_id_product, amount_product)
+VALUES (1, 1, 2),
+       (1, 2, 3),
+       (2, 1, 1),
+       (2, 3, 2);
+
+INSERT INTO Bill (cart_id_cart, account_id, date, total_bill)
+VALUES (1, 1, NOW(), 1000000),
+       (2, 1, NOW(), 1500000);
