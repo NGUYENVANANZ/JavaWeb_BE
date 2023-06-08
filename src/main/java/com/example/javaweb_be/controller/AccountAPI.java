@@ -31,7 +31,6 @@ public class AccountAPI {
 
     @PostMapping("/login")
     public ResponseEntity<Optional<Account>> login(@RequestBody Account account) {
-        System.out.println(account);
         Optional<Account> existingAccount = accountRepository.findAccountByUserNameAndPassWord(
                 account.getUserName(),
                 account.getPassWord()
@@ -59,7 +58,6 @@ public class AccountAPI {
 
     @PutMapping("/{id}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account) {
-        System.out.println(account);
         Optional<Account> existingAccountOptional = accountRepository.findById(id);
         if (!existingAccountOptional.isPresent()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
