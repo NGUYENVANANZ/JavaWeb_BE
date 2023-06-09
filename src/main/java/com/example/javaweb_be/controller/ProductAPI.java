@@ -53,5 +53,9 @@ public class ProductAPI {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{keyword}")
+    public ResponseEntity<List<Product>> searchProducts(@PathVariable String keyword) {
+        return new ResponseEntity<>(productRepository.findByNameSP(keyword), HttpStatus.OK);
 
+    }
 }

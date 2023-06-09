@@ -2,11 +2,14 @@ package com.example.javaweb_be.controller;
 
 
 import com.example.javaweb_be.model.Account;
+import com.example.javaweb_be.model.Cart;
 import com.example.javaweb_be.repository.AccountRepository;
+import com.example.javaweb_be.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,10 @@ import java.util.Optional;
 public class AccountAPI {
     @Autowired
     AccountRepository accountRepository;
+
+
+    @Autowired
+    CartRepository cartRepository;
 
     @GetMapping("/")
     public ResponseEntity<List<Account>> getAllAccounts() {
@@ -31,10 +38,7 @@ public class AccountAPI {
 
     @PostMapping("/login")
     public ResponseEntity<Optional<Account>> login(@RequestBody Account account) {
-        Optional<Account> existingAccount = accountRepository.findAccountByUserNameAndPassWord(
-                account.getUserName(),
-                account.getPassWord()
-        );
+        Optional<Account> existingAccount = accountRepository.findAccountByUserNameAndPassWord(account.getUserName(), account.getPassWord());
         if (existingAccount.isPresent()) {
             return new ResponseEntity<>(existingAccount, HttpStatus.OK);
         } else {
@@ -50,6 +54,10 @@ public class AccountAPI {
         try {
             account.setRole_User(2L);
             Account newAccount = accountRepository.save(account);
+            Cart cart = new Cart();
+            cart.setAccount(account);
+            cart.setStatus(true);
+            cartRepository.save(cart);
             return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

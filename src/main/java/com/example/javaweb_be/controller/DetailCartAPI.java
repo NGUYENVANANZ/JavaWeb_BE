@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/detailCart")
@@ -31,13 +32,19 @@ public class DetailCartAPI {
 
     @GetMapping("/{idCart}/{idProduct}/{amount}")
     public ResponseEntity<DetailCartDTO> addProductToCart(@PathVariable long idCart, @PathVariable long idProduct, @PathVariable int amount) {
-        DetailCart detailCart = new DetailCart();
-        Cart cart = cartRepository.findById(idCart).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        detailCart.setCart(cart);
-        detailCart.setProduct(product);
-        detailCart.setAmountProduct(amount);
-        detailCartRepository.save(detailCart);
+      DetailCart detailCart = detailCartRepository.findDetailCartByCart_IdCartAndProductIdProduct(idCart,idProduct);
+        if (detailCart != null){
+            detailCart.setAmountProduct(detailCart.getAmountProduct()+amount);
+            detailCartRepository.save(detailCart);
+        }else {
+            detailCart = new DetailCart();
+            Cart cart = cartRepository.findById(idCart).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            detailCart.setCart(cart);
+            detailCart.setProduct(product);
+            detailCart.setAmountProduct(amount);
+            detailCartRepository.save(detailCart);
+        }
         DetailCartDTO detailCartDTO = new DetailCartDTO();
         detailCartDTO.setId(detailCart.getId());
         detailCartDTO.setProductName(detailCart.getProduct().getNameSP());
